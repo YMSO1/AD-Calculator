@@ -1,3 +1,5 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Stack;
 
 public class Eval {
@@ -14,9 +16,9 @@ public class Eval {
 
     public static double evaluate(String expression) {
         // Stack for numbers: 'values'
-        Stack<Double> values = new Stack<>();
+        Deque<Double> values = new ArrayDeque<>();
         // Stack for Operators: 'ops'
-        Stack<Character> ops = new Stack<>();
+        Deque<Character> ops = new ArrayDeque<>();
 
         for (int i = 0; i < expression.length(); i++) {
             // Current token is a whitespace, skip it
@@ -55,8 +57,8 @@ public class Eval {
             }
 
             // Closing brace encountered, solve entire brace
-            else if (!ops.empty() && expression.charAt(i) == ')') {
-                while (!ops.empty() && ops.peek() != '(') {
+            else if (!ops.isEmpty() && expression.charAt(i) == ')') {
+                while (!ops.isEmpty() && ops.peek() != '(') {
                     values.push(applyOp(ops.pop(), values.pop(), values.pop()));
                 }
                 ops.pop();
@@ -67,7 +69,7 @@ public class Eval {
                     || expression.charAt(i) == '-'
                     || expression.charAt(i) == '*'
                     || expression.charAt(i) == '/') {
-                while (!ops.empty() && hasPrecedence(expression.charAt(i), ops.peek())) {
+                while (!ops.isEmpty() && hasPrecedence(expression.charAt(i), ops.peek())) {
                     values.push(applyOp(ops.pop(), values.pop(), values.pop()));
                 }
                 ops.push(expression.charAt(i));
@@ -75,7 +77,7 @@ public class Eval {
         }
 
         // Entire expression has been parsed at this point, apply remaining ops to remaining values
-        while (!ops.empty()) {
+        while (!ops.isEmpty()) {
             values.push(applyOp(ops.pop(), values.pop(), values.pop()));
         }
         return values.pop();
