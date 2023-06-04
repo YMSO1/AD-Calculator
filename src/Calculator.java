@@ -1,10 +1,12 @@
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Objects;
 
 /**
  * Counts the expression passed as a string. Any numbers, brackets "(", ")"
  * and mathematical operators can be used in the expression "+", "-", "*", "/".
- * The result of the expression must be within the "double" primitive.
  */
 
 public class Calculator {
@@ -30,8 +32,8 @@ public class Calculator {
      * @return the result of a mathematical expression.
      * @throws IllegalArgumentException if incorrect entry of a mathematical expression.
      */
-    public static double evaluate(String expression) {
-        Deque<Double> values = new ArrayDeque<>();
+    public static String evaluate(String expression) {
+        Deque<BigDecimal> values = new ArrayDeque<>();
         Deque<Character> ops = new ArrayDeque<>();
         char ch;
 
@@ -66,7 +68,7 @@ public class Calculator {
         while (!ops.isEmpty())
             values.push(applyOp(ops.pop(), values.pop(), values.pop()));
 
-        return values.pop();
+        return values.pop().stripTrailingZeros().toPlainString();
     }
 
     /**
@@ -78,13 +80,13 @@ public class Calculator {
      * @param i index of the current iteration.
      * @return index of the last element of the number in the expression.
      */
-    private static int pushAndSkip(String expression, Deque<Double> values, int i) {
+    private static int pushAndSkip(String expression, Deque<BigDecimal> values, int i) {
         // There may be more than one digit in a number
         int j = i + 1;
         while (j < expression.length() && Character.isDigit(expression.charAt(j)))
             j++;
 
-        values.push(Double.parseDouble(expression.substring(i, j)));
+        values.push(new BigDecimal(expression.substring(i, j)));
         i = j - 1;
         return i;
     }
@@ -125,18 +127,19 @@ public class Calculator {
      * @return the result of applying the operator to numbers.
      * @throws UnsupportedOperationException if divide by zero.
      */
-    private static double applyOp(char op, double b, double a) {
+    private static BigDecimal applyOp(char op, BigDecimal b, BigDecimal a) {
         switch (op) {
             case '-':
-                return a - b;
+                return a.subtract(b);
             case '+':
-                return a + b;
+                return a.add(b);
             case '*':
-                return a * b;
+                return a.multiply(b);
             case '/':
-                if (b == 0) throw new UnsupportedOperationException("Cannot divide by zero");
-                return a / b;
+                if (Objects.equals(b, BigDecimal.ZERO))
+                    throw new UnsupportedOperationException("Cannot divide by zero");
+                return a.divide(b, 4, RoundingMode.HALF_EVEN);
         }
-        return 0;
+        return BigDecimal.ZERO;
     }
 }
