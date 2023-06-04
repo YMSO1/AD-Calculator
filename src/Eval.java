@@ -13,68 +13,122 @@ public class Eval {
         test("4+2*(5-2)", 10);
     }
 
+    /**
+     * Passing through the expression, it gradually allocates its parts, distributing numbers and operators along the walls.
+     * The operators include: "(", ")", "+", "-", "*", "/").
+     *<p>
+     *  - Current token is a whitespace, skip it.
+     *<p>
+     *  - Current token is a number, push it to stack for numbers.
+     *<p>
+     *  - Current token is an opening brace, push it to 'ops'.
+     *<p>
+     *  - Closing brace encountered, solve entire brace.
+     *<p>
+     *  - Current token is an operator, depending on the priority, we push it into the stack or calculate.
+     *<p>
+     *  - When the expression has ended, apply remaining ops to remaining values
+     *<p>
+     * @param expression - mathematical expression.
+     * @return the result of a mathematical expression.
+     * @throws IllegalArgumentException if incorrect entry of a mathematical expression.
+     */
     public static double evaluate(String expression) {
-        // Stack for numbers: 'values'
         Deque<Double> values = new ArrayDeque<>();
-        // Stack for Operators: 'ops'
         Deque<Character> ops = new ArrayDeque<>();
+        char ch;
 
         for (int i = 0; i < expression.length(); i++) {
-            // Current token is a whitespace, skip it
-            if (expression.charAt(i) == ' ') {
+            ch = expression.charAt(i);
+
+            if (ch == ' ')
                 continue;
-            }
 
-            // Current token is a number, push it to stack for numbers
-            if (Character.isDigit(expression.charAt(i))) {
-                // There may be more than one digit in a number
-                int j = i + 1;
-                while (j < expression.length() && Character.isDigit(expression.charAt(j))){
-                    j++;
-                }
-                values.push(Double.parseDouble(expression.substring(i, j)));
-                i = j - 1;
-            }
+            if (Character.isDigit(ch))
+                i = pushAndSkip(expression, values, i);
 
-            // Current token is an opening brace, push it to 'ops'
-            else if (expression.charAt(i) == '(') {
-                ops.push(expression.charAt(i));
-            }
+            else if (ch == '(')
+                ops.push(ch);
 
-            // Closing brace encountered, solve entire brace
-            else if (!ops.isEmpty() && expression.charAt(i) == ')') {
-                while (!ops.isEmpty() && ops.peek() != '(') {
+            else if (!ops.isEmpty() && ch == ')') {
+                while (!ops.isEmpty() && ops.peek() != '(')
                     values.push(applyOp(ops.pop(), values.pop(), values.pop()));
-                }
+
                 ops.pop();
             }
-
-            // Current token is an operator.
-            else if (expression.charAt(i) == '+'
-                    || expression.charAt(i) == '-'
-                    || expression.charAt(i) == '*'
-                    || expression.charAt(i) == '/') {
-                while (!ops.isEmpty() && hasPrecedence(expression.charAt(i), ops.peek())) {
+            else if (isOperator(ch)) {
+                while (!ops.isEmpty() && hasPrecedence(ch, ops.peek()))
                     values.push(applyOp(ops.pop(), values.pop(), values.pop()));
-                }
-                ops.push(expression.charAt(i));
-            }
-        }
 
-        // Entire expression has been parsed at this point, apply remaining ops to remaining values
-        while (!ops.isEmpty()) {
-            values.push(applyOp(ops.pop(), values.pop(), values.pop()));
+                ops.push(ch);
+            }
+            else
+                throw new IllegalArgumentException("Incorrect entry of a mathematical expression");
+
         }
+        while (!ops.isEmpty())
+            values.push(applyOp(ops.pop(), values.pop(), values.pop()));
+
         return values.pop();
     }
 
-    // Returns true if 'op2' has higher or same precedence as 'op1', otherwise returns false.
-    public static boolean hasPrecedence(char op1, char op2) {
-        return op2 != '(' && op2 != ')' && op1 != '*' && op1 != '/';
+    /**
+     * Determines all encountered numbers, pushes it into the stack of numbers and moves
+     * the index to the last element of the number.
+     *<p>
+     * @param expression mathematical expression.
+     * @param values stack of numbers.
+     * @param i index of the current iteration.
+     * @return index of the last element of the number in the expression.
+     */
+    private static int pushAndSkip(String expression, Deque<Double> values, int i) {
+        // There may be more than one digit in a number
+        int j = i + 1;
+        while (j < expression.length() && Character.isDigit(expression.charAt(j)))
+            j++;
+
+        values.push(Double.parseDouble(expression.substring(i, j)));
+        i = j - 1;
+        return i;
     }
 
-    // A utility method to apply an operator 'op' on operands 'a' and 'b'. Return the result.
-    public static double applyOp(char op, double b, double a) {
+    /**
+     * Determines whether a symbol is a mathematical operator
+     * <p>
+     * @param ch the character being checked.
+     * @return true if this char is operator, false otherwise.
+     */
+    private static boolean isOperator(char ch) {
+        return ch == '+'
+                || ch == '-'
+                || ch == '*'
+                || ch == '/';
+    }
+
+    /**
+     * Defines the priority operator
+     *<p>
+     * @param op1 current operator.
+     * @param op2 previous operator
+     * @return true if 'op2' has higher or same precedence as 'op1', otherwise returns false.
+     */
+    private static boolean hasPrecedence(char op1, char op2) {
+        return op2 != '('
+                && op2 != ')'
+                && op1 != '*'
+                && op1 != '/';
+    }
+
+    /**
+     * A utility method to apply an operator 'op' on operands 'a' and 'b'. Return the result.
+     *
+     * @param op the last operator on the stack.
+     * @param b the last number on the stack.
+     * @param a the penultimate number on the stack.
+     * @return the result of applying the operator to numbers.
+     * @throws UnsupportedOperationException if divide by zero.
+     */
+    private static double applyOp(char op, double b, double a) {
         switch (op) {
             case '-':
                 return a - b;
@@ -89,12 +143,16 @@ public class Eval {
         return 0;
     }
 
-    private static void test(String str, double expect) {
+    /**
+     * Calculator Test
+     *
+     * @param str a string with a mathematical expression.
+     * @param expect the expected result of calculating the mathematical expression specified in "str".
+     */
+    public static void test(String str, double expect) {
         double result = evaluate(str);
-        if (result == expect) {
-            System.out.println("CORRECT!");
-        } else {
-            System.out.println(str + " should be evaluated to " + expect + ", but was " + result);
-        }
+        System.out.println(result == expect
+                ? "CORRECT!"
+                : str + " should be evaluated to " + expect + ", but was " + result);
     }
 }
