@@ -13,28 +13,34 @@ public class Eval {
     }
 
     public static double evaluate(String expression) {
-        char[] tokens = expression.toCharArray();
-
         // Stack for numbers: 'values'
         Stack<Double> values = new Stack<>();
         // Stack for Operators: 'ops'
         Stack<Character> ops = new Stack<>();
 
-        for (int i = 0; i < tokens.length; i++) {
+        for (int i = 0; i < expression.length(); i++) {
             // Current token is a whitespace, skip it
-            if (tokens[i] == ' ') {
+            if (expression.charAt(i) == ' ') {
                 continue;
             }
 
             // Current token is a number, push it to stack for numbers
-            if (tokens[i] > '0' && tokens[i] <= '9') {
+            if (expression.charAt(i) > '0'
+                    && expression.charAt(i) <= '9') {
+
                 StringBuilder sbuf = new StringBuilder();
 
                 // There may be more than one digit in a number
-                while (i < tokens.length && tokens[i] >= '0' && tokens[i] <= '9'){
-                    sbuf.append(tokens[i]);
+                while (i < expression.length()
+                        && expression.charAt(i) >= '0'
+                        && expression.charAt(i) <= '9'){
 
-                    if (i + 1 < tokens.length && tokens[i + 1] >= '0' && tokens[i + 1] <= '9') {
+                    sbuf.append(expression.charAt(i));
+
+                    if (i + 1 < expression.length()
+                            && expression.charAt(i) >= '0'
+                            && expression.charAt(i) <= '9') {
+
                         i++;
                     } else {
                         break;
@@ -44,12 +50,12 @@ public class Eval {
             }
 
             // Current token is an opening brace, push it to 'ops'
-            else if (tokens[i] == '(') {
-                ops.push(tokens[i]);
+            else if (expression.charAt(i) == '(') {
+                ops.push(expression.charAt(i));
             }
 
             // Closing brace encountered, solve entire brace
-            else if (!ops.empty() && tokens[i] == ')') {
+            else if (!ops.empty() && expression.charAt(i) == ')') {
                 while (!ops.empty() && ops.peek() != '(') {
                     values.push(applyOp(ops.pop(), values.pop(), values.pop()));
                 }
@@ -57,11 +63,14 @@ public class Eval {
             }
 
             // Current token is an operator.
-            else if (tokens[i] == '+' || tokens[i] == '-' || tokens[i] == '*' || tokens[i] == '/') {
-                while (!ops.empty() && hasPrecedence(tokens[i], ops.peek())) {
+            else if (expression.charAt(i) == '+'
+                    || expression.charAt(i) == '-'
+                    || expression.charAt(i) == '*'
+                    || expression.charAt(i) == '/') {
+                while (!ops.empty() && hasPrecedence(expression.charAt(i), ops.peek())) {
                     values.push(applyOp(ops.pop(), values.pop(), values.pop()));
                 }
-                ops.push(tokens[i]);
+                ops.push(expression.charAt(i));
             }
         }
 
