@@ -1,6 +1,5 @@
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Stack;
 
 public class Eval {
     public static void main(String[] args) {
@@ -27,28 +26,14 @@ public class Eval {
             }
 
             // Current token is a number, push it to stack for numbers
-            if (expression.charAt(i) > '0'
-                    && expression.charAt(i) <= '9') {
-
-                StringBuilder sbuf = new StringBuilder();
-
+            if (Character.isDigit(expression.charAt(i))) {
                 // There may be more than one digit in a number
-                while (i < expression.length()
-                        && expression.charAt(i) >= '0'
-                        && expression.charAt(i) <= '9'){
-
-                    sbuf.append(expression.charAt(i));
-
-                    if (i + 1 < expression.length()
-                            && expression.charAt(i) >= '0'
-                            && expression.charAt(i) <= '9') {
-
-                        i++;
-                    } else {
-                        break;
-                    }
+                int j = i + 1;
+                while (j < expression.length() && Character.isDigit(expression.charAt(j))){
+                    j++;
                 }
-                values.push(Double.parseDouble(sbuf.toString()));
+                values.push(Double.parseDouble(expression.substring(i, j)));
+                i = j - 1;
             }
 
             // Current token is an opening brace, push it to 'ops'
