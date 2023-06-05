@@ -80,10 +80,10 @@ public class Calculator {
      */
     private static int readValue(String expression, Deque<BigDecimal> values, int start) {
         // There may be more than one digit in a number
-        int end = start + 1;
-        while (end < expression.length() && Character.isDigit(expression.charAt(end))) {
+        int end = start;
+        do {
             end++;
-        }
+        } while (end < expression.length() && Character.isDigit(expression.charAt(end)));
 
         values.push(new BigDecimal(expression.substring(start, end)));
         return end - start - 1;
