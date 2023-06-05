@@ -135,7 +135,7 @@ public class Calculator {
                 }
                 return a.divide(b, 4, RoundingMode.HALF_EVEN);
         }
-        return BigDecimal.ZERO;
+        throw new UnsupportedOperationException("Invalid operator: " + op);
     }
 
 }

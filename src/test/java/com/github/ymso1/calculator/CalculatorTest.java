@@ -21,7 +21,6 @@ class CalculatorTest {
         " 222 * ( 2 + 5 ) / 14,111",
         " 222 * ( 12 + ( 1 - 3 ) * 2 ) / 8,222",
         "4+2*(5-2),10",
-        "1(2+3,0",
         "12345678901234567890123456789012345678901234567890123456789012345678901234567890 * 12345678901234567890123456789012345678901234567890123456789012345678901234567890" +
             ",152415787532388367504953515625666819450083828733760097552251181223112635269100012193273126047859425087639153757049236500533455762536198787501905199875019052100",
     })
@@ -39,6 +38,7 @@ class CalculatorTest {
         "3++,java.util.NoSuchElementException,",
         "3 / 0,java.lang.UnsupportedOperationException,Cannot divide by zero",
         "1 2 3 + 4 ),java.util.NoSuchElementException,",
+        "1(2+3,java.lang.UnsupportedOperationException,Invalid operator: (",
     })
     void test2(String expression, Class<?> exceptionType, String message) {
         var throwable = assertThatThrownBy(() -> Calculator.evaluate(expression))
