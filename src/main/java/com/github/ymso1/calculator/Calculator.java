@@ -52,7 +52,7 @@ public class Calculator {
 
                 ops.pop();
             } else if (isOperator(token)) {
-                while (!ops.isEmpty() && hasPrecedence(token, ops.peek())) {
+                while (!ops.isEmpty() && hasPrecedence(ops.peek())) {
                     values.push(applyOp(ops.pop(), values.pop(), values.pop()));
                 }
 
@@ -105,15 +105,11 @@ public class Calculator {
     /**
      * Defines the priority operator
      *
-     * @param op1 current operator.
      * @param op2 previous operator
      * @return true if 'op2' has higher or same precedence as 'op1', otherwise returns false.
      */
-    private static boolean hasPrecedence(char op1, char op2) {
-        return op2 != '('
-            && op2 != ')'
-            && op1 != '*'
-            && op1 != '/';
+    private static boolean hasPrecedence(char op2) {
+        return op2 == '*' || op2 == '/';
     }
 
     /**
