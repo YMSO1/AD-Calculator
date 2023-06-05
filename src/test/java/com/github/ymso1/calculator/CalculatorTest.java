@@ -26,6 +26,14 @@ class CalculatorTest {
         "4+2*(5-2),10",
         "12345678901234567890123456789012345678901234567890123456789012345678901234567890 * 12345678901234567890123456789012345678901234567890123456789012345678901234567890" +
             ",152415787532388367504953515625666819450083828733760097552251181223112635269100012193273126047859425087639153757049236500533455762536198787501905199875019052100",
+        //'\u0660' through '\u0669', Arabic-Indic digits
+        "\u0661 + \u0662,3",
+        //'\u06F0' through '\u06F9', Extended Arabic-Indic digits
+        "\u06F1 + \u06F2,3",
+        //'\u0966' through '\u096F', Devanagari digits
+        "\u0967 + \u0968,3",
+        //'\uFF10' through '\uFF19', Fullwidth digits
+        "\uFF11 + \uFF12,3",
     })
     void test1(String expression, BigDecimal expected) {
         assertThat(Calculator.evaluate(expression)).isCloseTo(expected, within(BigDecimal.ZERO));
