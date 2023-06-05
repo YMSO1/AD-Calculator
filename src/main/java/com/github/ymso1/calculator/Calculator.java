@@ -43,7 +43,7 @@ public class Calculator {
             }
 
             if (Character.isDigit(ch)) {
-                i = pushAndSkip(expression, values, i);
+                i += readValue(expression, values, i);
             } else if (ch == '(') {
                 ops.push(ch);
             } else if (!ops.isEmpty() && ch == ')') {
@@ -76,19 +76,18 @@ public class Calculator {
      *
      * @param expression mathematical expression.
      * @param values     stack of numbers.
-     * @param i          index of the current iteration.
-     * @return index of the last element of the number in the expression.
+     * @param start      index of first digit.
+     * @return count of processed symbols.
      */
-    private static int pushAndSkip(String expression, Deque<BigDecimal> values, int i) {
+    private static int readValue(String expression, Deque<BigDecimal> values, int start) {
         // There may be more than one digit in a number
-        int j = i + 1;
-        while (j < expression.length() && Character.isDigit(expression.charAt(j))) {
-            j++;
+        int end = start + 1;
+        while (end < expression.length() && Character.isDigit(expression.charAt(end))) {
+            end++;
         }
 
-        values.push(new BigDecimal(expression.substring(i, j)));
-        i = j - 1;
-        return i;
+        values.push(new BigDecimal(expression.substring(start, end)));
+        return end - start - 1;
     }
 
     /**
