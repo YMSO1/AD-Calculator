@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
  * Counts the expression passed as a string.
@@ -46,25 +47,17 @@ public class Calculator {
             } else if (token == '(') {
                 ops.push(token);
             } else if (token == ')') {
-                while (!ops.isEmpty() && ops.peek() != '(') {
-                    values.push(applyOp(ops.pop(), values.pop(), values.pop()));
-                }
-
+                applyOps(ops, values, op -> op != '(');
                 ops.pop();
             } else if (isOperator(token)) {
-                while (!ops.isEmpty() && hasPrecedence(ops.peek())) {
-                    values.push(applyOp(ops.pop(), values.pop(), values.pop()));
-                }
-
+                applyOps(ops, values, Calculator::hasPrecedence);
                 ops.push(token);
             } else {
                 throw new IllegalArgumentException("Incorrect entry of a mathematical expression: " + token);
             }
 
         }
-        while (!ops.isEmpty()) {
-            values.push(applyOp(ops.pop(), values.pop(), values.pop()));
-        }
+        applyOps(ops, values, __ -> true);
 
         return values.pop().stripTrailingZeros();
     }
@@ -114,6 +107,12 @@ public class Calculator {
      */
     private static boolean hasPrecedence(char op2) {
         return op2 == '*' || op2 == '/';
+    }
+
+    private static void applyOps(Deque<Character> ops, Deque<BigDecimal> values, Predicate<Character> opTest) {
+        while (!ops.isEmpty() && opTest.test(ops.peek())) {
+            values.push(applyOp(ops.pop(), values.pop(), values.pop()));
+        }
     }
 
     /**
