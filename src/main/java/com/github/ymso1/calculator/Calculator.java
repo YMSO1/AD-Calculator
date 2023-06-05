@@ -125,20 +125,18 @@ public class Calculator {
      * @throws UnsupportedOperationException if divide by zero.
      */
     private static BigDecimal applyOp(char op, BigDecimal b, BigDecimal a) {
-        switch (op) {
-            case '-':
-                return a.subtract(b);
-            case '+':
-                return a.add(b);
-            case '*':
-                return a.multiply(b);
-            case '/':
+        return switch (op) {
+            case '-' -> a.subtract(b);
+            case '+' -> a.add(b);
+            case '*' -> a.multiply(b);
+            case '/' -> {
                 if (Objects.equals(b, BigDecimal.ZERO)) {
                     throw new UnsupportedOperationException("Cannot divide by zero");
                 }
-                return a.divide(b, 4, RoundingMode.HALF_EVEN);
-        }
-        throw new UnsupportedOperationException("Invalid operator: " + op);
+                yield a.divide(b, 4, RoundingMode.HALF_EVEN);
+            }
+            default -> throw new UnsupportedOperationException("Invalid operator: " + op);
+        };
     }
 
 }
