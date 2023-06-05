@@ -58,7 +58,7 @@ public class Calculator {
 
                 ops.push(token);
             } else {
-                throw new IllegalArgumentException("Incorrect entry of a mathematical expression");
+                throw new IllegalArgumentException("Incorrect entry of a mathematical expression: " + token);
             }
 
         }
