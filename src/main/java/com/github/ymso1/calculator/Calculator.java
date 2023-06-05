@@ -38,31 +38,34 @@ public class Calculator {
         for (int i = 0; i < expression.length(); i++) {
             ch = expression.charAt(i);
 
-            if (ch == ' ')
+            if (ch == ' ') {
                 continue;
+            }
 
-            if (Character.isDigit(ch))
+            if (Character.isDigit(ch)) {
                 i = pushAndSkip(expression, values, i);
-
-            else if (ch == '(')
+            } else if (ch == '(') {
                 ops.push(ch);
-
-            else if (!ops.isEmpty() && ch == ')') {
-                while (!ops.isEmpty() && ops.peek() != '(')
+            } else if (!ops.isEmpty() && ch == ')') {
+                while (!ops.isEmpty() && ops.peek() != '(') {
                     values.push(applyOp(ops.pop(), values.pop(), values.pop()));
+                }
 
                 ops.pop();
             } else if (isOperator(ch)) {
-                while (!ops.isEmpty() && hasPrecedence(ch, ops.peek()))
+                while (!ops.isEmpty() && hasPrecedence(ch, ops.peek())) {
                     values.push(applyOp(ops.pop(), values.pop(), values.pop()));
+                }
 
                 ops.push(ch);
-            } else
+            } else {
                 throw new IllegalArgumentException("Incorrect entry of a mathematical expression");
+            }
 
         }
-        while (!ops.isEmpty())
+        while (!ops.isEmpty()) {
             values.push(applyOp(ops.pop(), values.pop(), values.pop()));
+        }
 
         return values.pop().stripTrailingZeros().toPlainString();
     }
@@ -79,8 +82,9 @@ public class Calculator {
     private static int pushAndSkip(String expression, Deque<BigDecimal> values, int i) {
         // There may be more than one digit in a number
         int j = i + 1;
-        while (j < expression.length() && Character.isDigit(expression.charAt(j)))
+        while (j < expression.length() && Character.isDigit(expression.charAt(j))) {
             j++;
+        }
 
         values.push(new BigDecimal(expression.substring(i, j)));
         i = j - 1;
@@ -132,8 +136,9 @@ public class Calculator {
             case '*':
                 return a.multiply(b);
             case '/':
-                if (Objects.equals(b, BigDecimal.ZERO))
+                if (Objects.equals(b, BigDecimal.ZERO)) {
                     throw new UnsupportedOperationException("Cannot divide by zero");
+                }
                 return a.divide(b, 4, RoundingMode.HALF_EVEN);
         }
         return BigDecimal.ZERO;
