@@ -33,31 +33,30 @@ public class Calculator {
     public static String evaluate(String expression) {
         Deque<BigDecimal> values = new ArrayDeque<>();
         Deque<Character> ops = new ArrayDeque<>();
-        char ch;
 
         for (int i = 0; i < expression.length(); i++) {
-            ch = expression.charAt(i);
+            char token = expression.charAt(i);
 
-            if (ch == ' ') {
+            if (token == ' ') {
                 continue;
             }
 
-            if (Character.isDigit(ch)) {
+            if (Character.isDigit(token)) {
                 i += readValue(expression, values, i);
-            } else if (ch == '(') {
-                ops.push(ch);
-            } else if (!ops.isEmpty() && ch == ')') {
+            } else if (token == '(') {
+                ops.push(token);
+            } else if (!ops.isEmpty() && token == ')') {
                 while (!ops.isEmpty() && ops.peek() != '(') {
                     values.push(applyOp(ops.pop(), values.pop(), values.pop()));
                 }
 
                 ops.pop();
-            } else if (isOperator(ch)) {
-                while (!ops.isEmpty() && hasPrecedence(ch, ops.peek())) {
+            } else if (isOperator(token)) {
+                while (!ops.isEmpty() && hasPrecedence(token, ops.peek())) {
                     values.push(applyOp(ops.pop(), values.pop(), values.pop()));
                 }
 
-                ops.push(ch);
+                ops.push(token);
             } else {
                 throw new IllegalArgumentException("Incorrect entry of a mathematical expression");
             }
