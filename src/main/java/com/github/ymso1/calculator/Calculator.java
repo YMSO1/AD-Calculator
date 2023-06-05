@@ -30,7 +30,7 @@ public class Calculator {
      * @return the result of a mathematical expression.
      * @throws IllegalArgumentException if incorrect entry of a mathematical expression.
      */
-    public static String evaluate(String expression) {
+    public static BigDecimal evaluate(String expression) {
         Deque<BigDecimal> values = new ArrayDeque<>();
         Deque<Character> ops = new ArrayDeque<>();
 
@@ -66,7 +66,7 @@ public class Calculator {
             values.push(applyOp(ops.pop(), values.pop(), values.pop()));
         }
 
-        return values.pop().stripTrailingZeros().toPlainString();
+        return values.pop().stripTrailingZeros();
     }
 
     /**

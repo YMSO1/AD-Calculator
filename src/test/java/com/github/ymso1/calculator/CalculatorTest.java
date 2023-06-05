@@ -4,9 +4,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.math.BigDecimal;
+
 import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.within;
 
 class CalculatorTest {
 
@@ -24,8 +27,8 @@ class CalculatorTest {
         "12345678901234567890123456789012345678901234567890123456789012345678901234567890 * 12345678901234567890123456789012345678901234567890123456789012345678901234567890" +
             ",152415787532388367504953515625666819450083828733760097552251181223112635269100012193273126047859425087639153757049236500533455762536198787501905199875019052100",
     })
-    void test1(String expression, String expected) {
-        assertThat(Calculator.evaluate(expression)).isEqualTo(expected);
+    void test1(String expression, BigDecimal expected) {
+        assertThat(Calculator.evaluate(expression)).isCloseTo(expected, within(BigDecimal.ZERO));
     }
 
     @DisplayName("Should fail on evaluate expression")
