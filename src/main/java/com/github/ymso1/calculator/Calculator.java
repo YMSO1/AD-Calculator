@@ -52,14 +52,12 @@ public class Calculator {
                     values.push(applyOp(ops.pop(), values.pop(), values.pop()));
 
                 ops.pop();
-            }
-            else if (isOperator(ch)) {
+            } else if (isOperator(ch)) {
                 while (!ops.isEmpty() && hasPrecedence(ch, ops.peek()))
                     values.push(applyOp(ops.pop(), values.pop(), values.pop()));
 
                 ops.push(ch);
-            }
-            else
+            } else
                 throw new IllegalArgumentException("Incorrect entry of a mathematical expression");
 
         }
@@ -97,9 +95,9 @@ public class Calculator {
      */
     private static boolean isOperator(char ch) {
         return ch == '+'
-                || ch == '-'
-                || ch == '*'
-                || ch == '/';
+            || ch == '-'
+            || ch == '*'
+            || ch == '/';
     }
 
     /**
@@ -111,9 +109,9 @@ public class Calculator {
      */
     private static boolean hasPrecedence(char op1, char op2) {
         return op2 != '('
-                && op2 != ')'
-                && op1 != '*'
-                && op1 != '/';
+            && op2 != ')'
+            && op1 != '*'
+            && op1 != '/';
     }
 
     /**

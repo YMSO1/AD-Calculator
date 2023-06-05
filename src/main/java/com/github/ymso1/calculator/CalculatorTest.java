@@ -12,8 +12,8 @@ public class CalculatorTest {
         String result = Calculator.evaluate(str);
 
         System.out.println(result.equals(expect)
-                ? "CORRECT!"
-                : str + " should be evaluated to " + expect + ", but was " + result);
+            ? "CORRECT!"
+            : str + " should be evaluated to " + expect + ", but was " + result);
     }
 
 }
