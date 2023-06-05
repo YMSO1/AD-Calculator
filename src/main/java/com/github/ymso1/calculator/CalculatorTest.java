@@ -1,3 +1,5 @@
+package com.github.ymso1.calculator;
+
 public class CalculatorTest {
 
     /**

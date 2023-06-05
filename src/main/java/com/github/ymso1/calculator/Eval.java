@@ -1,3 +1,5 @@
+package com.github.ymso1.calculator;
+
 public class Eval {
     public static void main(String[] args) {
         CalculatorTest.test(" 3 + 4", "7");

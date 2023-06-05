@@ -1,3 +1,5 @@
+package com.github.ymso1.calculator;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayDeque;
