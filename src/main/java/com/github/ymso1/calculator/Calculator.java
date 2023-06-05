@@ -41,7 +41,7 @@ public class Calculator {
                 continue;
             }
 
-            if (Character.isDigit(token)) {
+            if (isDigit(token)) {
                 i += readValue(expression, values, i);
             } else if (token == '(') {
                 ops.push(token);
@@ -69,6 +69,10 @@ public class Calculator {
         return values.pop().stripTrailingZeros();
     }
 
+    private static boolean isDigit(char token) {
+        return token == '.' || Character.isDigit(token);
+    }
+
     /**
      * Determines all encountered numbers, pushes it into the stack of numbers and moves
      * the index to the last element of the number.
@@ -83,7 +87,7 @@ public class Calculator {
         int end = start;
         do {
             end++;
-        } while (end < expression.length() && Character.isDigit(expression.charAt(end)));
+        } while (end < expression.length() && isDigit(expression.charAt(end)));
 
         values.push(new BigDecimal(expression.substring(start, end)));
         return end - start - 1;

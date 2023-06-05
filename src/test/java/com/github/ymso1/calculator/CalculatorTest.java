@@ -35,6 +35,7 @@ class CalculatorTest {
         "\u0967 + \u0968,3",
         //'\uFF10' through '\uFF19', Fullwidth digits
         "\uFF11 + \uFF12,3",
+        "13.5+12.5*3,51",
     })
     void test1(String expression, BigDecimal expected) {
         assertThat(Calculator.evaluate(expression)).isCloseTo(expected, within(BigDecimal.ZERO));
@@ -51,6 +52,7 @@ class CalculatorTest {
         "3 / 0,java.lang.UnsupportedOperationException,Cannot divide by zero",
         "1 2 3 + 4 ),java.util.NoSuchElementException,",
         "1(2+3,java.lang.UnsupportedOperationException,Invalid operator: (",
+        "13.5+12.5.3,java.lang.NumberFormatException,Character array contains more than one decimal point",
     })
     void test2(String expression, Class<?> exceptionType, String message) {
         var throwable = assertThatThrownBy(() -> Calculator.evaluate(expression))
