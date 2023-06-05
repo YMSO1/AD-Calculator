@@ -33,7 +33,7 @@ class CalculatorTest {
     @CsvSource(ignoreLeadingAndTrailingWhitespace = false, value = {
         " 3 + ,java.util.NoSuchElementException,",
         " 3 + a,java.lang.IllegalArgumentException,Incorrect entry of a mathematical expression: a",
-        " 3 ) 4,java.lang.IllegalArgumentException,Incorrect entry of a mathematical expression: )",
+        " 3 ) 4,java.util.NoSuchElementException,",
         " 2 + 3 ) 4,java.util.NoSuchElementException,",
         "3++,java.util.NoSuchElementException,",
         "3 / 0,java.lang.UnsupportedOperationException,Cannot divide by zero",

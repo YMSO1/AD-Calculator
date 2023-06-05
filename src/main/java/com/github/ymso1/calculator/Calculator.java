@@ -45,7 +45,7 @@ public class Calculator {
                 i += readValue(expression, values, i);
             } else if (token == '(') {
                 ops.push(token);
-            } else if (!ops.isEmpty() && token == ')') {
+            } else if (token == ')') {
                 while (!ops.isEmpty() && ops.peek() != '(') {
                     values.push(applyOp(ops.pop(), values.pop(), values.pop()));
                 }
