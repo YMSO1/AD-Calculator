@@ -7,29 +7,25 @@ import java.util.Deque;
 import java.util.Objects;
 
 /**
- * Counts the expression passed as a string. Any numbers, brackets "(", ")"
- * and mathematical operators can be used in the expression "+", "-", "*", "/".
+ * Counts the expression passed as a string.
+ * <p>
+ * Any numbers, brackets ({@code (}, {@code )}) and mathematical operators ({@code +}, {@code -}, {@code *}, {@code /}) can be used in the expression.
  */
-
 public class Calculator {
 
     /**
-     * Passing through the expression, it gradually allocates its parts, distributing numbers
-     * and operators along the walls.
+     * Passing through the expression, it gradually allocates its parts, distributing numbers and operators along the walls.
+     * <p>
      * The operators include: "(", ")", "+", "-", "*", "/").
-     *<p>
-     *  - Current token is a whitespace, skip it.
-     *<p>
-     *  - Current token is a number, push it to stack for numbers.
-     *<p>
-     *  - Current token is an opening brace, push it to 'ops'.
-     *<p>
-     *  - Closing brace encountered, solve entire brace.
-     *<p>
-     *  - Current token is an operator, depending on the priority, we push it into the stack or calculate.
-     *<p>
-     *  - When the expression has ended, apply remaining ops to remaining values
-     *<p>
+     * <ul>
+     * <li>Current token is a whitespace, skip it.</li>
+     * <li>Current token is a number, push it to stack for numbers.</li>
+     * <li>Current token is an opening brace, push it to 'ops'.</li>
+     * <li>Closing brace encountered, solve entire brace.</li>
+     * <li>Current token is an operator, depending on the priority, we push it into the stack or calculate.</li>
+     * <li>When the expression has ended, apply remaining ops to remaining values.</li>
+     * </ul>
+     *
      * @param expression - mathematical expression.
      * @return the result of a mathematical expression.
      * @throws IllegalArgumentException if incorrect entry of a mathematical expression.
@@ -76,10 +72,10 @@ public class Calculator {
     /**
      * Determines all encountered numbers, pushes it into the stack of numbers and moves
      * the index to the last element of the number.
-     *<p>
+     *
      * @param expression mathematical expression.
-     * @param values stack of numbers.
-     * @param i index of the current iteration.
+     * @param values     stack of numbers.
+     * @param i          index of the current iteration.
      * @return index of the last element of the number in the expression.
      */
     private static int pushAndSkip(String expression, Deque<BigDecimal> values, int i) {
@@ -95,7 +91,7 @@ public class Calculator {
 
     /**
      * Determines whether a symbol is a mathematical operator
-     * <p>
+     *
      * @param ch the character being checked.
      * @return true if this char is operator, false otherwise.
      */
@@ -108,7 +104,7 @@ public class Calculator {
 
     /**
      * Defines the priority operator
-     *<p>
+     *
      * @param op1 current operator.
      * @param op2 previous operator
      * @return true if 'op2' has higher or same precedence as 'op1', otherwise returns false.
@@ -124,8 +120,8 @@ public class Calculator {
      * A utility method to apply an operator 'op' on operands 'a' and 'b'. Return the result.
      *
      * @param op the last operator on the stack.
-     * @param b the last number on the stack.
-     * @param a the penultimate number on the stack.
+     * @param b  the last number on the stack.
+     * @param a  the penultimate number on the stack.
      * @return the result of applying the operator to numbers.
      * @throws UnsupportedOperationException if divide by zero.
      */
@@ -144,4 +140,5 @@ public class Calculator {
         }
         return BigDecimal.ZERO;
     }
+
 }

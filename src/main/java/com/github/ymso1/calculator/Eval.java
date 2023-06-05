@@ -1,6 +1,7 @@
 package com.github.ymso1.calculator;
 
 public class Eval {
+
     public static void main(String[] args) {
         CalculatorTest.test(" 3 + 4", "7");
         CalculatorTest.test(" 5 + 2 * 6", "17");
@@ -32,4 +33,5 @@ public class Eval {
                         1905199875019052100
                         """);
     }
+
 }
